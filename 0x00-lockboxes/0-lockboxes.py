@@ -7,6 +7,7 @@ def canUnlockAll(boxes):
     if not boxes:
         return False
 
+    openBox(boxes[0], boxes, hasOpen)
     return True if (len(hasOpen) == len(boxes)) else False
 
 
