@@ -22,11 +22,9 @@ heap_t *most_left(heap_t *node)
 				return (l);
 			else if (!r->left || !r->right)
 				return (r);
-			else
-			{
-				current = l;
-				continue;
-			}
+
+			current = l;
+			continue;
 		}
 		else if (!l || !r)
 			return (current);
@@ -41,38 +39,40 @@ heap_t *most_left(heap_t *node)
  */
 void mantain_propertie(heap_t *node)
 {
-	heap_t *parent, *sibling, *ancestor;
+	heap_t *parent, *sibling, *ancestor, *current = node;
 
-	if (!node || !node->parent)
-		return;
-	parent = node->parent, ancestor = parent->parent;
-	sibling = (parent->right == node) ? parent->left : NULL;
-	if (node->n > parent->n)
+	while (!current || !current->parent)
 	{
-		if (ancestor)
+		parent = current->parent, ancestor = current->parent;
+		sibling = (parent->right == current) ? parent->left : NULL;
+		if (current->n > parent->n)
 		{
-			if (parent == ancestor->left)
-				ancestor->left = node;
+			if (ancestor)
+			{
+				if (parent == ancestor->left)
+					ancestor->left = current;
+				else
+					ancestor->right = current;
+			}
+			current->parent = ancestor;
+			parent->parent = current;
+			parent->right = current->right;
+			parent->left = current->left;
+			if (current->left)
+				current->left->parent = parent;
+			if (current->right)
+				current->right->parent = parent;
+			if (sibling)
+			{
+				current->left = sibling;
+				sibling->parent = current;
+				current->right = parent;
+			}
 			else
-				ancestor->right = node;
-		}
-		node->parent = ancestor;
-		parent->parent = node;
-		parent->right = node->right;
-		parent->left = node->left;
-		if (node->left)
-			node->left->parent = parent;
-		if (node->right)
-			node->right->parent = parent;
-		if (sibling)
-		{
-			node->left = sibling;
-			sibling->parent = node;
-			node->right = parent;
+				current->left = parent;
 		}
 		else
-			node->left = parent;
-		mantain_propertie(node);
+			break;
 	}
 }
 
