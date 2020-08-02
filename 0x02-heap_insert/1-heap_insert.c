@@ -8,22 +8,29 @@
  */
 heap_t *most_left(heap_t *node)
 {
-	heap_t *l = NULL, *r = NULL;
+	heap_t *l = NULL, *r = NULL, *current = node;
 
-	if (!node)
+	if (!current)
 		return (NULL);
-	l = node->left, r = node->right;
-	if (l && r)
+
+	while (current)
 	{
-		if (!l->left || !l->right)
-			return (l);
-		else if (!r->left || !r->right)
-			return (r);
-		else
-			return (most_left(l));
+		l = current->left, r = current->right;
+		if (l && r)
+		{
+			if (!l->left || !l->right)
+				return (l);
+			else if (!r->left || !r->right)
+				return (r);
+			else
+			{
+				current = l;
+				continue;
+			}
+		}
+		else if (!l || !r)
+			return (current);
 	}
-	else if (!l || !r)
-		return (node);
 	return (NULL);
 }
 
