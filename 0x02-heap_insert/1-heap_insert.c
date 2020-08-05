@@ -33,43 +33,61 @@ heap_t *most_left(heap_t *node)
 }
 
 /**
+ * swap - swap a node with its parent
+ * @node: is the given node
+ */
+void swap(heap_t *node)
+{
+	heap_t *parent = NULL, *sibling = NULL, *ancestor = NULL;
+	int is_left = 0;
+
+	if (!node || !node->parent)
+		return;
+	parent = node->parent, ancestor = parent->parent;
+	is_left = parent->left == node;
+	sibling = (is_left) ? parent->right : parent->left;
+
+	if (ancestor)
+	{
+		if (ancestor->left == parent)
+			ancestor->left = node;
+		else
+			ancestor->right = node;
+	}
+	node->parent = ancestor;
+	parent->parent = node;
+	parent->right = node->right;
+	if (node->right)
+		node->right->parent = parent;
+	parent->left = node->left;
+	if (node->left)
+		node->left->parent = parent;
+	if (sibling)
+		sibling->parent = node;
+	if (is_left)
+	{
+		node->left = parent;
+		node->right = sibling;
+	}
+	else
+	{
+		node->right = parent;
+		node->left = sibling;
+	}
+}
+
+/**
  * mantain_propertie - check that the given node has the max heap
  * propertie. In otherwise, do the correspondin operation to save it
  * @node: node to be evaluated
  */
 void mantain_propertie(heap_t *node)
 {
-	heap_t *parent, *sibling, *ancestor;
-
 	if (!node || !node->parent)
 		return;
-	parent = node->parent, ancestor = parent->parent;
-	sibling = (parent->right == node) ? parent->left : NULL;
-	if (node->n > parent->n)
+	if (node->n > node->parent->n)
 	{
-		if (ancestor)
-		{
-			if (parent == ancestor->left)
-				ancestor->left = node;
-			else
-				ancestor->right = node;
-		}
-		node->parent = ancestor;
-		parent->parent = node;
-		parent->right = node->right;
-		parent->left = node->left;
-		if (node->left)
-			node->left->parent = parent;
-		if (node->right)
-			node->right->parent = parent;
-		if (sibling)
-		{
-			node->left = sibling;
-			sibling->parent = node;
-			node->right = parent;
-		}
-		else
-			node->left = parent;
+		swap(node);
 		mantain_propertie(node);
 	}
 }
