@@ -1,8 +1,14 @@
 #!/usr/bin/python3
-# from math import sqrt
+from math import sqrt
+
+"""
+    Get the minumun operation iterative
+    it no take a lot time
+"""
 
 
 def minOperations(n):
+    """min operations"""
     if n <= 1:
         return 0
 
@@ -13,7 +19,7 @@ def minOperations(n):
 
 
 def isPrime(n):
-
+    """Is prime"""
     for i in range(2, int(sqrt(n)) + 1):
         if n % i == 0:
             return 0
@@ -21,6 +27,7 @@ def isPrime(n):
 
 
 def sumPrimeFactors(n):
+    """sumPrimeFactor"""
     sum = 0
     i = 2
 
