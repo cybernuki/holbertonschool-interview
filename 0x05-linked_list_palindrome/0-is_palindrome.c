@@ -53,12 +53,18 @@ int is_palindrome(listint_t **head)
 
 	while (index)
 	{
-		put(&stack, index);
 		index = index->next;
 		size++;
 	}
 
-	mid = size / 2, index = *head, stackIndex = stack;
+	mid = size / 2, index = *head;
+	while (i < mid)
+	{
+		put(&stack, index);
+		index = index->next;
+		i++;
+	}
+	i = 0, index = *head, stackIndex = stack;
 	while (i < mid && isPalindrome)
 	{
 		if (index->n != stackIndex->n)
