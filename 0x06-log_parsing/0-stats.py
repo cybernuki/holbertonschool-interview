@@ -26,9 +26,9 @@ total_size = {"total": 0}
 def print_stats():
 	"""Print the request statistics"""
 	print("File size: {}".format(total_size["total"]))
-	for status_req in sorted(general_stat.keys()):
-		if general_stat[status_req]:
-			print("{}: {}".format(status_req, general_stat[status_req]))
+	for status_req in sorted(stats.keys()):
+		if stats[status_req]:
+			print("{}: {}".format(status_req, stats[status_req]))
 
 
 def assign_values(line):
@@ -36,8 +36,8 @@ def assign_values(line):
 	try:
 		parse_line = line.split(" ")
 		total_size["total"] += int(parse_line[-1])
-		if parse_line[-2] in general_stat:
-			general_stat[parse_line[-2]] += 1
+		if parse_line[-2] in stats:
+			stats[parse_line[-2]] += 1
 	except:
 		pass
 
