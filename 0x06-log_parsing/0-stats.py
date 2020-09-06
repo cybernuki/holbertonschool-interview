@@ -1,57 +1,56 @@
-#!/usr/bin/python3
 """
-    According this input request:
-    <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
-    <status code> <file size>
-    Print the request statistics in the next way:
-    File size: <total size>
-    <status code>: <number>
-    .
-    .
-    .
-    <status code>: <number>
+Write a script that reads stdin line by line and computes metrics:
 """
 import sys
 
-general_stat = {"200": 0,
-                "301": 0,
-                "400": 0,
-                "401": 0,
-                "403": 0,
-                "404": 0,
-                "405": 0,
-                "500": 0}
-total_size = {"total": 0}
+
+counters = {
+    "size": 0,
+    "lines": 1
+}
+
+contCode = {
+    "200": 0, "301": 0, "400": 0, "401": 0,
+    "403": 0, "404": 0, "405": 0, "500": 0
+}
 
 
-def print_stats():
-    """Print the request statistics"""
-    print("File size: {}".format(total_size["total"]))
-    for status_req in sorted(general_stat.keys()):
-        if general_stat[status_req]:
-            print("{}: {}".format(status_req, general_stat[status_req]))
+def printCodes():
+    """
+    function print the codes and the number
+    """
+    # print file size
+    print("File size: {}".format(counters["size"]))
+    # print all codes
+    for key in sorted(contCode.keys()):
+        # if a val is not 0
+        if contCode[key] != 0:
+            print("{}: {}".format(key, contCode[key]))
 
 
-def assign_values(line):
-    """save the values parsed"""
-    try:
-        parse_line = line.split(" ")
-        total_size["total"] += int(parse_line[-1])
-        if parse_line[-2] in general_stat:
-            general_stat[parse_line[-2]] += 1
-    except:
-        pass
+def countCodeSize(listData):
+    """
+    count the codes and file size
+    """
+    # count file size
+    counters["size"] += int(listData[-1])
+    # if exists
+    if listData[-2] in contCode:
+        # count status code
+        contCode[listData[-2]] += 1
 
 
 if __name__ == "__main__":
-    i = 1
     try:
         for line in sys.stdin:
-            assign_values(line)
-            if i % 10 == 0:
-                print_stats()
-            i += 1
+            try:
+                countCodeSize(line.split(" "))
+            except:
+                pass
+            if counters["lines"] % 10 == 0:
+                printCodes()
+            counters["lines"] += 1
     except KeyboardInterrupt:
-        print_stats()
+        printCodes()
         raise
-    print_stats()
+    printCodes()
