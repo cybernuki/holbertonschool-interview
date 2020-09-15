@@ -7,7 +7,8 @@
  */
 int is_palindrome(unsigned long n)
 {
-	int arr[50], h = 0, l = 0;
+	int arr[20] = {0};
+	int h = 0, l = 0;
 	unsigned long power = 1;
 
 	while ((n / power) >= 1)
