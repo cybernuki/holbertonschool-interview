@@ -17,6 +17,8 @@ int is_palindrome(unsigned long n)
 		power *= 10, h++;
 	}
 
+	if (h == 1)
+		return (1);
 	h--;
 	while (h > l)
 	{
