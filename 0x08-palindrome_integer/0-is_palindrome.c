@@ -9,23 +9,26 @@ int is_palindrome(unsigned long n)
 {
 	int arr[20] = {0};
 	int h = 0, l = 0;
-	unsigned long power = 1;
+	unsigned long power = n;
 
-	while ((n / power) >= 1)
-	{
-		arr[h] = (n / power) % 10;
-		power *= 10, h++;
-	}
+	do {
+		power /= 10, h++;
+	} while (power);
 
 	if (h == 1)
 		return (1);
-	h--;
-	while (h > l)
-	{
-		if (arr[l] != arr[h])
-			return (0);
-		l++, h--;
-	}
 
+	for (l = 0; l < h; l++)
+		arr[h - 1 - l] = n % 10, n /= 10;
+
+	for (l = 0; l < h; l++)
+	{
+		if (l > h / 2)
+			break;
+		else if (arr[l] == arr[h - 1 - l])
+			continue;
+		else
+			return (0);
+	}
 	return (1);
 }
