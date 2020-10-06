@@ -1,5 +1,5 @@
 #include "menger.h"
-#include <unistd.h>
+
 
 void menger(int level)
 {
@@ -52,7 +52,6 @@ void printRecord(char **sponge, size_t size)
         {
             printf("%c", sponge[i][j]);
             fflush(stdout);
-            usleep(9000);
         }
 
         printf("\n");
