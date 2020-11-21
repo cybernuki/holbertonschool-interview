@@ -39,6 +39,6 @@ def rain(walls):
             if (walls[i] >= prev):
                 prev = walls[i]
             else:
-                water += prev - walls[i]
+                rainwater += prev - walls[i]
 
     return rainwater
