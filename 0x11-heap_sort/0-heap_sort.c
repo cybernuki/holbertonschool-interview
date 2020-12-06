@@ -6,7 +6,7 @@
  * @n: size of the arrray
  * @i: current position
  */
-void heapify(int *arr, int n, int i)
+void heapify(int *arr, int n, int i, size_t original_size)
 {
 	int tmp = 0;
 	int largest = i;
@@ -24,7 +24,8 @@ void heapify(int *arr, int n, int i)
 		tmp = arr[i];
 		arr[i] = arr[largest];
 		arr[largest] = tmp;
-		heapify(arr, n, largest);
+		print_array(arr, original_size);
+		heapify(arr, n, largest, original_size);
 	}
 }
 
@@ -42,7 +43,7 @@ void heap_sort(int *array, size_t size)
 		return;
 
 	for (i = size / 2; i > 0; i--)
-		heapify(array, size, i - 1);
+		heapify(array, size, i - 1, size);
 
 	for (i = size - 1; i > 0; i--)
 	{
@@ -50,6 +51,6 @@ void heap_sort(int *array, size_t size)
 		array[0] = array[i];
 		array[i] = tmp;
 		print_array(array, size);
-		heapify(array, i, 0);
+		heapify(array, i, 0, size);
 	}
 }
