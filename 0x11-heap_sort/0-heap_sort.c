@@ -5,6 +5,7 @@
  * @arr: the given array
  * @n: size of the arrray
  * @i: current position
+ * @original_size: original size of the array to use in the print function
  */
 void heapify(int *arr, int n, int i, size_t original_size)
 {
