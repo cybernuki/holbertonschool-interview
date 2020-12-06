@@ -1,55 +1,73 @@
 #include "sort.h"
 
 /**
- * heapify - performe a heapify on the array
- * @arr: the given array
- * @size: size of the array
- * @i: current position
- * @size: size
+ * heap_sort - Build max heap
+ * @array: array
+ * @size: size of array
  */
-void heapify(int *arr, int size, int i)
+void heap_sort(int *array, size_t size)
 {
-	int largest = i, tmp = 0;
-	int left = 2 * i + 1;
-	int right = left + 1;
 
-	if (left < size && arr[largest] < arr[left])
-		largest = left;
+	size_t i;
 
-	if (right < size && arr[largest] < arr[right])
-		largest = right;
+	if (array == NULL)
+		return;
 
-	if (largest != i)
+	/* Build max heap */
+	for (i = size / 2; i > 0; i--)
+		heap_root(array, size, i - 1, size);
+
+	/* Heap sort */
+	for (i = size - 1; i > 0; i--)
 	{
-		tmp = arr[i];
-		arr[i] = arr[largest];
-		arr[largest] = tmp;
-		heapify(arr, size, largest);
+		swap(&array[0], &array[i], array, size);
+
+		/* Heapify root element to get highest element at root again */
+		heap_root(array, i, 0, size);
 	}
 }
 
 /**
- * heap_sort - sorts an array of numbers
- * @array: the given data's array
- * @size: size of the array
+ * heap_root - Find largest among root, left child and right chil
+ * @arr: array
+ * @n: size array
+ * @i: current position
+ * @size: size
  */
-void heap_sort(int *array, size_t size)
+void heap_root(int *arr, int n, int i, size_t size)
 {
-	size_t i = 0;
-	int tmp = 0;
+	/* Find largest among root, left child and right child */
 
-	if (!array)
-		return;
+	int largest = i;
+	int left = 2 * i + 1;
+	int right = 2 * i + 2;
 
-	for (i = size / 2; i > 0; i--)
-		heapify(array, size, i - 1);
+	if (left < n && arr[left] > arr[largest])
+		largest = left;
 
-	for (i = size - 1; i > 0; i--)
+	if (right < n && arr[right] > arr[largest])
+		largest = right;
+
+	/* Swap and continue heapifying if root is not largest */
+	if (largest != i)
 	{
-		tmp = array[0];
-		array[0] = array[i];
-		array[i] = tmp;
-		print_array(array, size);
-		heapify(array, i, 0);
+		swap(&arr[i], &arr[largest], arr, size);
+		heap_root(arr, n, largest, size);
 	}
+}
+
+/**
+ * swap - Function to swap the the position of two elements
+ * @a: first integer
+ * @b: second integer
+ * @array: array of numbers
+ * @n: size of array
+ */
+void swap(int *a, int *b, int *array, size_t n)
+{
+
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+	print_array(array, n);
 }
