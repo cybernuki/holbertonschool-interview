@@ -1,46 +1,17 @@
 #include "sort.h"
 
 /**
- * heap_sort - Build max heap
- * @array: array
- * @size: size of array
- */
-void heap_sort(int *array, size_t size)
-{
-
-	size_t i;
-
-	if (array == NULL)
-		return;
-
-	/* Build max heap */
-	for (i = size / 2; i > 0; i--)
-		heap_root(array, size, i - 1, size);
-
-	/* Heap sort */
-	for (i = size - 1; i > 0; i--)
-	{
-		swap(&array[0], &array[i], array, size);
-
-		/* Heapify root element to get highest element at root again */
-		heap_root(array, i, 0, size);
-	}
-}
-
-/**
- * heap_root - Find largest among root, left child and right chil
- * @arr: array
- * @n: size array
+ * heapify - perform the heapify algorithm on the array
+ * @arr: the given array
+ * @n: size of the arrray
  * @i: current position
- * @size: size
  */
-void heap_root(int *arr, int n, int i, size_t size)
+void heapify(int *arr, int n, int i)
 {
-	/* Find largest among root, left child and right child */
-
+	int tmp = 0;
 	int largest = i;
 	int left = 2 * i + 1;
-	int right = 2 * i + 2;
+	int right = left + 1;
 
 	if (left < n && arr[left] > arr[largest])
 		largest = left;
@@ -48,26 +19,37 @@ void heap_root(int *arr, int n, int i, size_t size)
 	if (right < n && arr[right] > arr[largest])
 		largest = right;
 
-	/* Swap and continue heapifying if root is not largest */
 	if (largest != i)
 	{
-		swap(&arr[i], &arr[largest], arr, size);
-		heap_root(arr, n, largest, size);
+		tmp = arr[i];
+		arr[i] = arr[largest];
+		arr[largest] = tmp;
+		heapify(arr, n, largest);
 	}
 }
 
 /**
- * swap - Function to swap the the position of two elements
- * @a: first integer
- * @b: second integer
- * @array: array of numbers
- * @n: size of array
+ * heap_sort - performs a heap sort on the given array
+ * @array: given data array
+ * @size: size of the  array
  */
-void swap(int *a, int *b, int *array, size_t n)
+void heap_sort(int *array, size_t size)
 {
+	size_t i;
+	int tmp = 0;
 
-	int temp = *a;
-	*a = *b;
-	*b = temp;
-	print_array(array, n);
+	if (!array)
+		return;
+
+	for (i = size / 2; i > 0; i--)
+		heapify(array, size, i - 1);
+
+	for (i = size - 1; i > 0; i--)
+	{
+		tmp = array[0];
+		array[0] = array[i];
+		array[i] = tmp;
+		print_array(array, size);
+		heapify(array, i, 0);
+	}
 }
