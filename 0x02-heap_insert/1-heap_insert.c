@@ -8,7 +8,7 @@
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	size_t n = get_heap_size(*root) + 1;
+	ssize_t n = get_heap_size(*root) + 1;
 	int bit = 0;
 	heap_t *node = *root, *new_node;
 
