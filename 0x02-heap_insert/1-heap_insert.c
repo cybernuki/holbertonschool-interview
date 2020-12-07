@@ -1,124 +1,64 @@
 #include "binary_trees.h"
 
 /**
- * most_left - search the node where must be added the new
- * node
- * @node: is the current node on the heap tree
- * Return: a node that contains one or none child
- */
-heap_t *most_left(heap_t *node)
-{
-	heap_t *l = NULL, *r = NULL, *current = node;
-
-	if (!current)
-		return (NULL);
-
-	while (current)
-	{
-		l = current->left, r = current->right;
-		if (l && r)
-		{
-			if (!l->left || !l->right)
-				return (l);
-			else if (!r->left || !r->right)
-				return (r);
-
-			current = l;
-			continue;
-		}
-		else if (!l || !r)
-			return (current);
-	}
-	return (NULL);
-}
-
-/**
- * swap - swap a node with its parent
- * @node: is the given node
- */
-void swap(heap_t *node)
-{
-	heap_t *parent = NULL, *sibling = NULL, *ancestor = NULL;
-	int is_left = 0;
-
-	if (!node || !node->parent)
-		return;
-	parent = node->parent, ancestor = parent->parent;
-	is_left = parent->left == node;
-	sibling = (is_left) ? parent->right : parent->left;
-
-	if (ancestor)
-	{
-		if (ancestor->left == parent)
-			ancestor->left = node;
-		else
-			ancestor->right = node;
-	}
-	node->parent = ancestor;
-	parent->parent = node;
-	parent->right = node->right;
-	if (node->right)
-		node->right->parent = parent;
-	parent->left = node->left;
-	if (node->left)
-		node->left->parent = parent;
-	if (sibling)
-		sibling->parent = node;
-	if (is_left)
-	{
-		node->left = parent;
-		node->right = sibling;
-	}
-	else
-	{
-		node->right = parent;
-		node->left = sibling;
-	}
-}
-
-/**
- * mantain_propertie - check that the given node has the max heap
- * propertie. In otherwise, do the correspondin operation to save it
- * @node: node to be evaluated
- */
-void mantain_propertie(heap_t *node)
-{
-	if (!node || !node->parent)
-		return;
-	if (node->n > node->parent->n)
-	{
-		swap(node);
-		mantain_propertie(node);
-	}
-}
-
-/**
- * heap_insert - it inserts a new node into the heap
- * @root: a double pointer to the root of the tree
- * @value: is the value of the new node
- * Return: a pointer to the new node
+ * heap_insert - inserts new value into MAX HEAP
+ * @root: address of ptr to root node
+ * @value: the integer value of the node
+ * Return: ptr to new node or NULL on error.
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	heap_t *new = NULL, *leaft = NULL;
+	size_t n = get_heap_size(*root) + 1;
+	int bit = 0;
+	heap_t *node = *root, *new_node;
 
-	new = (heap_t *)binary_tree_node(NULL, value);
-	if (!root || !new)
+	new_node = binary_tree_node(node, value);
+	if (!new_node)
 		return (NULL);
 	if (!*root)
+		return (*root = new_node);
+	for (; 1 << (bit + 1) <= n; bit++)
+		;
+	for (bit--; bit > 0; bit--)
 	{
-		*root = new;
-		return (new);
+		if (n & (1 << bit))
+			node = node->right;
+		else
+			node = node->left;
 	}
-	leaft = most_left(*root);
-
-	if (!leaft->left)
-		leaft->left = new;
+	if (n & 1)
+		node->right = new_node;
 	else
-		leaft->right = new;
-	new->parent = leaft;
-	mantain_propertie(new);
-	if (!new->parent)
-		*root = new;
-	return (new);
+		node->left = new_node;
+	new_node->parent = node;
+	return (heapify(new_node));
+}
+
+/**
+ * get_heap_size - gets number of nodes in heap
+ * @root: pointer to root node
+ * Return: number of nodes
+ */
+size_t get_heap_size(heap_t *root)
+{
+	if (!root)
+		return (0);
+	return (1 + get_heap_size(root->left) + get_heap_size(root->right));
+}
+
+/**
+ * heapify - ensures Max Heap property
+ * @node: node to start heapification
+ * Return: pointer to starting node
+ */
+heap_t *heapify(heap_t *node)
+{
+	while (node && node->parent && node->n > node->parent->n)
+	{
+		node->parent->n -= node->n;
+		node->n = node->parent->n + node->n;
+		node->parent->n = node->n - node->parent->n;
+		node = node->parent;
+	}
+	return (node);
 }
