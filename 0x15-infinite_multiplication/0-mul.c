@@ -1,80 +1,84 @@
 #include "holberton.h"
 
 /**
- * display_error - Display the error message.
- * Return: Void.
- */
-void display_error(void)
-{
-	int i;
-	char *error = "Error";
-
-	for (i = 0; error[i] != '\0'; i++)
-		_putchar(error[i]);
-	_putchar('\n');
-	exit(98);
-}
-
-/**
-  * _strlen - Return the lenght of a string.
-  * @s: The string.
-  * Return: Lenght of a string.
+  * _strlen - returns the lenght of a given string.
+  * @string: The given string.
+  * Return: lenght of the given string.
   */
-int _strlen(char *s)
+int _strlen(char *string)
 {
 	int i = 0;
 
-	while (s[i] != '\0')
+	while (string[i] != '\0')
 		i++;
 
 	return (i);
 }
 
 /**
- * main - Multiply to big numbers.
- * @argc: Number of arguments.
- * @argv: Value of the arguments.
- * Return: Always 0.
+ * error_handler - handle error
+ */
+void error_handler(void)
+{
+	int i = 0;
+	char *error = "Error";
+
+	while (1)
+	{
+		if (error[i] == '\0')
+		{
+			_putchar('\n');
+			exit(98);
+		}
+		_putchar(error[i++]);
+	}
+}
+
+/**
+ * main - main.
+ * @argc: arguments.
+ * @argv: arguments.
+ * Return: int.
  */
 int main(int argc, char **argv)
 {
 	char *result;
-	int i, j, w, num1, num2, val1, val2, n = 0, k = 0, sum = 0, partial = 0;
+	int num1 = 0, num2 = 0, total = 0, value1 = 0, value2 = 0;
+	int i = 0, j = 0, n = 0, k = 0, sum = 0, partial = 0;
 
 	if (argc != 3)
-		display_error();
-
-	num1 = _strlen(argv[1]);
-	num2 = _strlen(argv[2]);
-
+		error_handler();
+	num1 = _strlen(argv[1]), num2 = _strlen(argv[2]), total = num1 + num2;
 	result = malloc(num1 + num2);
 	if (result == NULL)
 		exit(98);
-	for (i = 0; i < num1 + num2; i++)
-		result[i] = '0';
-	result[i] = '\0';
-	for (j = num1 - 1; j >= 0; j--, n++, k = 0, partial = 0)
+	for (i = 0; i <= total; i++)
+		result[i] = (i != total) ? '0' : '\0';
+	for (i = num1 - 1; i >= 0; i--, n++, k = 0, partial = 0)
 	{
-		val1 = argv[1][j] - '0';
-		for (w = num2 - 1; w >= 0; w--, k++)
+		value1 = argv[1][i] - '0';
+		for (j = num2 - 1; j >= 0; j--, k++)
 		{
-			val2 = argv[2][w] - '0';
-			sum = val1 * val2 + (result[k + n] - '0') + partial;
+			value2 = argv[2][j] - '0';
+			sum = value1 * value2 + (result[k + n] - '0') + partial;
 			partial = sum / 10;
 			result[k + n] = (sum % 10 + '0');
 		}
 		if (partial > 0)
 			result[k + n] = (partial + (result[k + n] - '0')) + '0';
 	}
-	i = num1 + num2;
+	i = total;
 	while (i >= 0 && result[i - 1] == '0')
 		i--;
-	while (i > 0)
+	while (1)
 	{
-		_putchar(result[i - 1]);
-		i--;
+		if (i == 0)
+		{
+			_putchar('\n');
+			break;
+		}
+		_putchar(result[i-- - 1]);
 	}
-	_putchar('\n');
 	free(result);
 	return (0);
 }
