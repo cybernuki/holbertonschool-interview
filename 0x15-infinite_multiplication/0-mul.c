@@ -1,84 +1,89 @@
 #include "holberton.h"
 
 /**
-  * _strlen - returns the lenght of a given string.
-  * @string: The given string.
-  * Return: lenght of the given string.
-  */
-int _strlen(char *string)
+ * _isdigit - check if a string is a digit
+ * Description - This function is to check if a string is a digit
+ * @n: Sring to guess if is an uppercase character
+ * Return: 1 if n is a digit, 0 otherwise
+ */
+int _isdigit(char *n)
 {
-	int i = 0;
+	int i;
 
-	while (string[i] != '\0')
+	i = 0;
+	while (*(n + i) != '\0')
+	{
+		if (*(n + i) < '0' || *(n + i) > '9')
+			return (0);
 		i++;
-
-	return (i);
+	}
+	return (1);
 }
 
 /**
- * error_handler - handle error
+ * _strlen - Return the len of a string
+ * Description: This function shows the length of a given string
+ * @s: Pointer that contains the string
+ * Return: @s len
  */
-void error_handler(void)
+int _strlen(const char *s)
 {
-	int i = 0;
-	char *error = "Error";
+	int len = 0;
 
-	while (1)
+	while (*s != '\0')
 	{
-		if (error[i] == '\0')
-		{
-			_putchar('\n');
-			exit(98);
-		}
-		_putchar(error[i++]);
+		len++;
+		s++;
 	}
+	return (len);
 }
 
 /**
- * main - main.
- * @argc: arguments.
- * @argv: arguments.
- * Return: int.
+ * main - the entry point
+ * @argc: Number of arguments
+ * @argv: Arguments to multiply
+ * Return: return 0, 98 otherwise and prints Error
  */
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-	char *result;
-	int num1 = 0, num2 = 0, total = 0, value1 = 0, value2 = 0;
-	int i = 0, j = 0, n = 0, k = 0, sum = 0, partial = 0;
+	int p, res, len, n1, n2, i, j;
+	int *total;
 
-	if (argc != 3)
-		error_handler();
-	num1 = _strlen(argv[1]), num2 = _strlen(argv[2]), total = num1 + num2;
-	result = malloc(num1 + num2);
-	if (result == NULL)
-		exit(98);
-	for (i = 0; i <= total; i++)
-		result[i] = (i != total) ? '0' : '\0';
-	for (i = num1 - 1; i >= 0; i--, n++, k = 0, partial = 0)
+	if (argc < 3 || argc > 3 || !(_isdigit(argv[1])) || !(_isdigit(argv[2])))
+		puts("Error"), exit(98);
+	if (argv[1][0] == '0' || argv[2][0] == '0')
 	{
-		value1 = argv[1][i] - '0';
-		for (j = num2 - 1; j >= 0; j--, k++)
-		{
-			value2 = argv[2][j] - '0';
-			sum = value1 * value2 + (result[k + n] - '0') + partial;
-			partial = sum / 10;
-			result[k + n] = (sum % 10 + '0');
-		}
-		if (partial > 0)
-			result[k + n] = (partial + (result[k + n] - '0')) + '0';
+		printf("0\n");
+		return (0);
 	}
-	i = total;
-	while (i >= 0 && result[i - 1] == '0')
-		i--;
-	while (1)
+	n1 = _strlen(argv[1]), n2 = _strlen(argv[2]);
+	len = n1 + n2;
+	total = calloc(len, sizeof(int *));
+	if (total == NULL)
+		puts("Error"), exit(98);
+	for (i = (n2 - 1); i > -1; i--)
 	{
-		if (i == 0)
+		res = 0;
+		for (j = (n1 - 1); j > -1; j--)
 		{
-			_putchar('\n');
-			break;
+			p = (argv[2][i] - '0') * (argv[1][j] - '0');
+			res = (p / 10);
+			total[(i + j) + 1] += (p % 10);
+			if (total[(i + j) + 1] > 9)
+			{
+				total[i + j] += total[(i + j) + 1] / 10;
+				total[(i + j) + 1] = total[(i + j) + 1] % 10;
+			}
+			total[(i + j)] += res;
 		}
-		_putchar(result[i-- - 1]);
 	}
-	free(result);
+	if (total[0] == 0)
+		i = 1;
+	else
+		i = 0;
+	for (; i < len; i++)
+		printf("%d", total[i]);
+	printf("\n");
+	free(total);
 	return (0);
 }
