@@ -31,3 +31,14 @@ List *add_node_end(List **list, char *str)
 	(*list)->prev = new_node;
 	return (new_node);
 }
+
+/**
+ * add_node_begin - adds node to end of list
+ * @list: address of pointer to head
+ * @str: string to copy & insert
+ * Return: pointer to new node
+ */
+List *add_node_begin(List **list, char *str)
+{
+	return (add_node_end(list, str) ? *list = (*list)->prev : NULL);
+}
