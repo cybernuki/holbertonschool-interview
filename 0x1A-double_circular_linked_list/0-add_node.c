@@ -33,7 +33,7 @@ List *add_node_end(List **list, char *str)
 }
 
 /**
- * add_node_end - adds node to end of list
+ * add_node_begin - adds node to end of list
  * @list: address of pointer to head
  * @str: string to copy & insert
  * Return: pointer to new node
